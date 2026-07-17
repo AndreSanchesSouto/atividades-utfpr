@@ -5,6 +5,22 @@ import lombok.Data;
 
 @Entity
 @Table(name = "funcionario")
+@NamedQuery(
+        name = "Funcionario.findByQuantidadeDependentes",
+        query = """
+            SELECT f
+            FROM Funcionario f
+           WHERE f.quantidadeDependentes = :quantidadeDependentes
+        """
+)
+@NamedNativeQuery(
+        name = "Funcionario.findByNomeLike",
+        query = """
+            SELECT * FROM funcionario
+            WHERE LOWER(nome) LIKE LOWER(CONCAT('%',:nome,'%'))
+        """,
+        resultClass = Funcionario.class
+)
 @Data
 public class Funcionario {
 
