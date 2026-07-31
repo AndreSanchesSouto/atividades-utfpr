@@ -13,4 +13,11 @@ public class DepartamentoService {
     @Autowired
     private DepartamentoRepository repository;
 
+    public List<Departamento> listarTodosDepartamentos() {
+        return repository.findAll();
+    }
+
+    public Departamento listarPrimeiroCadastro() {
+        return repository.findFirstByOrderByIdAsc();
+    }
 }

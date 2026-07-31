@@ -37,6 +37,30 @@ public class AtividadeJpaApplication {
 			for(Funcionario funcionario : funcionarioService.listarTodosFuncionarios()) {
 				log.info(funcionario.toString());
 			}
+
+			log.info("");
+			log.info("");
+			log.info("====================== ATIVIDADE");
+			log.info("Ex1");
+			log.info(funcionarioService.listarFuncionarioPorNomeEQuantidadeDependentes("Bruno Lima", 2).toString());
+			log.info("Ex2");
+			log.info(funcionarioService.listarFuncionariosPordepartamento("Tecnologia").toString());
+			log.info("Ex3");
+			log.info(departamentoService.listarPrimeiroCadastro().toString());
+			log.info("Ex4");
+			log.info(funcionarioService.listarFuncionarioMaiorSalario().toString());
+			log.info("Ex5");
+			log.info(funcionarioService.listarFuncionariosMaiorSalario(3).toString());
+			log.info("Ex6");
+			log.info(funcionarioService.listarFuncionariosSemDependentes().toString());
+			log.info("Ex7");
+			log.info(funcionarioService.listarFuncionariosSalarioMaiorQue(5000f).toString());
+			log.info("Ex8");
+			log.info(funcionarioService.listarFuncionariosDeSalarioMaiorQue(9000f).toString());
+			log.info("Ex9");
+			log.info(funcionarioService.listarFuncionariosPorQuantidadeDependentes(2).toString());
+			log.info("Ex10");
+			log.info(funcionarioService.listarFuncionariosPorNomeContem("Ana").toString());
 		};
 	}
 }
