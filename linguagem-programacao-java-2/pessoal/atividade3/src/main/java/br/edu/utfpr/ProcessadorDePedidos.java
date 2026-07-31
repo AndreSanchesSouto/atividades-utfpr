@@ -14,19 +14,18 @@ import java.util.concurrent.StructuredTaskScope;
 public final class ProcessadorDePedidos {
 
     public ResultadoPedido processarPedido(Pedido pedido) {
-        try (StructuredTaskScope escopo = StructuredTaskScope.open(StructuredTaskScope.Joiner.awaitAllSuccessfulOrThrow())) {
+        try (
+            StructuredTaskScope escopo = StructuredTaskScope.open(
+                    StructuredTaskScope.Joiner.awaitAllSuccessfulOrThrow()
+            )
+        ) {
             final Subtask<Estoque> estoquePedido = escopo.fork(() ->
-                    ServicosExternos.consultarEstoque(
-                            pedido.produto(),
-                            pedido.identificador()
-                    )
+                    ServicosExternos.consultarEstoque(pedido.produto(), pedido.identificador())
             );
             final Subtask<Preco> precoPedido = escopo.fork(() ->
-                    ServicosExternos.consultarPreco(
-                            pedido.produto(),
-                            pedido.identificador()
-                    )
+                    ServicosExternos.consultarPreco(pedido.produto(), pedido.identificador())
             );
+
             escopo.join();
 
             Estoque estoque = estoquePedido.get();
@@ -37,9 +36,9 @@ public final class ProcessadorDePedidos {
                 );
             }
 
-            CotacaoFrete frete = cotarFrete(pedido.produto());
-            Preco preco = precoPedido.get();
-            BigDecimal valorTotal = preco.valorUnitario()
+            final CotacaoFrete frete = cotarFrete(pedido.produto());
+            final Preco preco = precoPedido.get();
+            final BigDecimal valorTotal = preco.valorUnitario()
                     .multiply(BigDecimal.valueOf(pedido.quantidade()))
                     .add(frete.valor());
 
@@ -72,8 +71,8 @@ public final class ProcessadorDePedidos {
 
     public Relatorio processarArquivo(Path arquivoEntrada) throws Exception{
         try (final var escopo = StructuredTaskScope.open(StructuredTaskScope.Joiner.awaitAll())){
-            List<Pedido> pedidos = LeitorDePedidos.ler(arquivoEntrada);
-            List<Subtask<ResultadoPedido>> resultadoPedidos = new ArrayList<>();
+            final List<Pedido> pedidos = LeitorDePedidos.ler(arquivoEntrada);
+            final List<Subtask<ResultadoPedido>> resultadoPedidos = new ArrayList<>();
 
             for(Pedido pedido : pedidos) {
                 resultadoPedidos.add(escopo.fork(() -> processarPedido(pedido)));
@@ -81,11 +80,10 @@ public final class ProcessadorDePedidos {
 
             escopo.join();
 
-            List<PedidoAprovado> aprovados = new ArrayList<>();
-            List<PedidoRejeitado> rejeitados = new ArrayList<>();
-
-            for (Subtask<ResultadoPedido> subtask : resultadoPedidos) {
-                switch (subtask.get()) {
+            final List<PedidoAprovado> aprovados = new ArrayList<>();
+            final List<PedidoRejeitado> rejeitados = new ArrayList<>();
+            for (Subtask<ResultadoPedido> relatorio : resultadoPedidos) {
+                switch (relatorio.get()) {
                     case PedidoAprovado aprovado -> aprovados.add(aprovado);
                     case PedidoRejeitado rejeitado -> rejeitados.add(rejeitado);
                 }
