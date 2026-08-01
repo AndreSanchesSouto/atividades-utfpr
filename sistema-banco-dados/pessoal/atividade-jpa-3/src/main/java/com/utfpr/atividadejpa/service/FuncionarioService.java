@@ -2,10 +2,12 @@ package com.utfpr.atividadejpa.service;
 
 import com.utfpr.atividadejpa.entity.Funcionario;
 import com.utfpr.atividadejpa.repository.FuncionarioRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FuncionarioService {
@@ -13,6 +15,7 @@ public class FuncionarioService {
     @Autowired
     private FuncionarioRepository repository;
 
+    /// --------------------- ATIVIDADE ANTERIOR
     public List<Funcionario> listarTodosFuncionarios() {
         return repository.findAll();
     }
@@ -53,4 +56,35 @@ public class FuncionarioService {
         return repository.findByNomeLike(nome);
     }
 
+    public List<Funcionario> listarFuncionarios() {
+        return repository.findAll();
+    }
+
+    /// --------------------- ATIVIDADE ATUAL
+    @Transactional
+    public void aumentarSalarioEmXPorcento(Integer valor) {
+        repository.procedureAumentarSalarioEmXPorcento(valor);
+    }
+
+    public List<Funcionario> buscarPorFuncionariosSemDependentesPorNomeDepartamento(String nomeDepartamento) {
+        return repository.buscarPorFuncionariosSemDependentesPorNomeDepartamento(nomeDepartamento);
+    }
+
+    @Transactional
+    public void trocarTodosFuncionariosDeXDepartamentoParaYDepartamentoPorId(Integer departamentoX, Integer departamentoY) {
+        repository.trocarTodosFuncionariosDeXDepartamentoParaYDepartamentoPorId(departamentoX, departamentoY);
+    }
+
+    @Transactional
+    public void deletarFuncionariosPorDepartamento(Integer departamentoId) {
+        repository.deletarFuncionariosPorDepartamento(departamentoId);
+    }
+
+    public Optional<Funcionario> pegarPorId(Long id) {
+        return repository.findById(id);
+    }
+
+    public Funcionario salvarFuncionario(Funcionario funcionario) {
+        return repository.save(funcionario);
+    }
 }

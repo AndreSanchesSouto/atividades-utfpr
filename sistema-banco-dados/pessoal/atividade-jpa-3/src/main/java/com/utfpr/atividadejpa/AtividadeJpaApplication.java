@@ -40,7 +40,7 @@ public class AtividadeJpaApplication {
 
 			log.info("");
 			log.info("");
-			log.info("====================== ATIVIDADE");
+			log.info("====================== ATIVIDADE ANTERIOR");
 			log.info("Ex1");
 			log.info(funcionarioService.listarFuncionarioPorNomeEQuantidadeDependentes("Bruno Lima", 2).toString());
 			log.info("Ex2");
@@ -61,6 +61,24 @@ public class AtividadeJpaApplication {
 			log.info(funcionarioService.listarFuncionariosPorQuantidadeDependentes(2).toString());
 			log.info("Ex10");
 			log.info(funcionarioService.listarFuncionariosPorNomeContem("Ana").toString());
+
+			log.info("");
+			log.info("");
+			log.info("====================== ATIVIDADE ATUAL");
+			log.info("Ex1");
+			funcionarioService.aumentarSalarioEmXPorcento( 100);
+			log.info(funcionarioService.listarFuncionarios().toString());
+			log.info("Ex2");
+			log.info(funcionarioService.buscarPorFuncionariosSemDependentesPorNomeDepartamento("Tecnologia").toString());
+			log.info("Ex3");
+			funcionarioService.trocarTodosFuncionariosDeXDepartamentoParaYDepartamentoPorId( 1, 2);
+			log.info(funcionarioService.listarFuncionarios().toString());
+			log.info("Ex4");
+			funcionarioService.deletarFuncionariosPorDepartamento(2);
+			log.info(funcionarioService.listarFuncionarios().toString());
+			log.info("Ex5");
+			departamentoService.criarNovoDepartamentoEAssociarAFuncionario( "Relações Internacionais", 10L);
+			log.info(funcionarioService.listarFuncionarios().toString());
 		};
 	}
 }

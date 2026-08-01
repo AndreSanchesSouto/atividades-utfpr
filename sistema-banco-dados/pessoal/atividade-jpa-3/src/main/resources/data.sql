@@ -70,3 +70,16 @@ INSERT INTO funcionario
 (codigo_funcionario, nome, quantidade_dependentes, salario, cargo, codigo_departamento)
 VALUES
     (12, 'Lucas Oliveira', 1, 15000.00, 'Diretor de Tecnologia', 1);
+
+CREATE ALIAS IF NOT EXISTS aumentar_salario AS '
+void aumentarSalario(java.sql.Connection conn, int porcentagem) throws java.sql.SQLException {
+    String sql = "UPDATE funcionario SET salario = salario * (1 + ? / 100.0)";
+    try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, porcentagem);
+        stmt.executeUpdate();
+    }
+}
+';
+
+ALTER TABLE departamento ALTER COLUMN codigo_departamento RESTART WITH 5;
+ALTER TABLE funcionario ALTER COLUMN codigo_funcionario RESTART WITH 13;
