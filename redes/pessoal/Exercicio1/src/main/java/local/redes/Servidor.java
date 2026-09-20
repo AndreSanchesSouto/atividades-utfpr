@@ -1,4 +1,6 @@
-package org.example;
+// @author André Sanches Souto
+
+package local.redes;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -27,7 +29,8 @@ public class Servidor {
             saida = new DataOutputStream(conexao.getOutputStream());
 
             saida.writeUTF(resultado);
-            conexao.close(); servidor.close();
+            conexao.close();
+            servidor.close();
 
         } catch (IOException exception) {
             Logger.getLogger(Servidor.class.getName()) .log(Level.SEVERE, null, exception);
@@ -35,7 +38,7 @@ public class Servidor {
     }
 
     private static boolean cpfEhValido(String cpf) {
-        if (cpf.length() != 11) return false;
+        if (cpf.length() != 11 || cpf.equals("00000000000")) return false;
 
         char[] cpfChar = cpf.toCharArray();
 

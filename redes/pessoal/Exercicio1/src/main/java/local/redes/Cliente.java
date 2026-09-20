@@ -1,4 +1,6 @@
-package org.example;
+// @author André Sanches Souto
+
+package local.redes;
 
 import javax.swing.*;
 import java.io.DataInputStream;
@@ -27,6 +29,7 @@ public class Cliente {
             String resposta = entrada.readUTF();
             JOptionPane.showMessageDialog( null, "Resposta do servidor: " + resposta );
 
+            conexao.close();
         } catch (IOException exception) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, exception);
         }
