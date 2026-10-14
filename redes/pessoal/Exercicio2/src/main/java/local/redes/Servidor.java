@@ -38,10 +38,6 @@ public class Servidor {
             );
 
             saida.flush();
-            saida.close();
-            entrada.close();
-            conexao.close();
-            servidor.close();
 
             System.out.println("Servidor encerrado.");
         } catch (IOException | ClassNotFoundException exception) {
