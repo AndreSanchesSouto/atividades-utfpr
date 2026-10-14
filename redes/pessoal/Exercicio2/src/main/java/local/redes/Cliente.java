@@ -29,7 +29,7 @@ public class Cliente {
     }
 
     public static void main(String[] args) {
-        Janela tela = new Janela();
+        FormCliente tela = new FormCliente();
         tela.setVisible(true);
     }
 }

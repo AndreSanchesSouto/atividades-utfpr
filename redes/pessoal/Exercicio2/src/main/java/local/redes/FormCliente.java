@@ -9,13 +9,13 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.io.IOException;
 
-public class Janela extends JFrame {
+public class FormCliente extends JFrame {
 
     private JTextField campoNome;
     private JTextField campoIdade;
     private JTextArea areaRetorno;
 
-    public Janela() {
+    public FormCliente() {
         setTitle("Cliente");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

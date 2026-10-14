@@ -2,27 +2,26 @@
 
 package local.redes;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 
-public class Servidor {
+public class Servidor extends Thread {
 
-    private static ServerSocket servidor;
-    private static Socket conexao;
-    private static ObjectInputStream entrada;
-    private static ObjectOutputStream saida;
+    private Socket conexao;
 
-    public static void main(String[] args) {
+    public Servidor(Socket conexao) {
+        this.conexao = conexao;
+    }
+
+    @Override
+    public void run() {
         try {
-            servidor = new ServerSocket(50000);
-            System.out.println("Servidor aguardando conexão...");
-
-            conexao = servidor.accept();
-
-            entrada = new ObjectInputStream(conexao.getInputStream());
+            ObjectInputStream entrada = new ObjectInputStream(conexao.getInputStream());
 
             Pessoa pessoa = (Pessoa) entrada.readObject();
 
@@ -30,17 +29,32 @@ public class Servidor {
             System.out.println("Nome: " + pessoa.getNome());
             System.out.println("Idade: " + pessoa.getIdade());
 
-            saida = new ObjectOutputStream(conexao.getOutputStream());
+            ObjectOutputStream saida = new ObjectOutputStream(conexao.getOutputStream());
 
             saida.writeObject("Objeto recebido corretamente!\n" +
                     "Nome: " + pessoa.getNome() + "\n" +
                     "Idade: " + pessoa.getIdade() + "\n"
             );
 
-            saida.flush();
-
-            System.out.println("Servidor encerrado.");
         } catch (IOException | ClassNotFoundException exception) {
+            System.out.println(Arrays.toString(exception.getStackTrace()));
+        }
+
+    }
+
+    public static void main(String[] args) {
+        try {
+            ServerSocket servidor = new ServerSocket(50000);
+
+            while (true) {
+                System.out.println("Servidor aguardando conexão...");
+
+                Socket conexao = servidor.accept();
+                Servidor tServidor = new Servidor(conexao);
+                tServidor.start();
+            }
+
+        } catch (IOException exception) {
             System.err.println(exception.getMessage());
         }
     }
