@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Jogo de Soma</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <style>
+        :root {
+            --bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --primary: #3b6ef5;
+            --primary-hover: #2f5ad4;
+            --text: #23272f;
+            --muted: #6b7280;
+            --border: #e3e7ee;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 20px;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        section {
+            margin-bottom: 28px;
+            padding: 24px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        section:hover {
+            box-shadow: 0 6px 26px rgba(0, 0, 0, 0.09);
+        }
+
+        input, button {
+            padding: 10px 14px;
+            margin: 5px 0;
+            font-size: 15px;
+            font-family: inherit;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 110, 245, 0.15);
+        }
+
+        button {
+            cursor: pointer;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 110, 245, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .resultado {
+            margin-top: 15px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+        }
+
+        th, td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.6px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <h1>Jogo de Soma</h1>
+
+    <h:form>
+        <section>
+            <h2>Jogador</h2>
+
+            <h:panelGroup rendered="#{not jogoBean.iniciado}">
+                <h:outputLabel for="nome" value="Informe seu nome:" />
+                <br />
+
+                <h:inputText id="nome"
+                             value="#{jogoBean.nome}"
+                             required="true"
+                             requiredMessage="Informe seu nome."
+                             maxlength="80" />
+
+                <h:commandButton value="OK"
+                                 action="#{jogoBean.iniciarJogo}" />
+
+                <br />
+                <h:messages />
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{jogoBean.iniciado}">
+                <p>
+                    Jogador:
+                    <strong>#{jogoBean.nome}</strong>
+                </p>
+
+                <h2>Quanto é:</h2>
+
+                <p>
+                    <strong>#{jogoBean.numero1}
+                        + #{jogoBean.numero2} = </strong>
+
+                    <h:inputText id="resposta"
+                                 value="#{jogoBean.resposta}"
+                                 required="true"
+                                 requiredMessage="Informe a resposta."
+                                 converterMessage="Digite um número inteiro."
+                                 size="6" />
+                </p>
+
+                <h:commandButton value="Verificar"
+                                 action="#{jogoBean.verificarResposta}" />
+
+                <h:panelGroup rendered="#{not empty jogoBean.resultado}">
+                    <p class="resultado">
+                        <h:outputText value="#{jogoBean.resultado}" />
+                    </p>
+                </h:panelGroup>
+            </h:panelGroup>
+        </section>
+
+        <section>
+            <h2>Ranking Atual</h2>
+
+            <h:dataTable value="#{jogoBean.ranking}"
+                         var="jogador">
+
+                <h:column>
+                    <f:facet name="header">Posição</f:facet>
+                    #{jogoBean.ranking.indexOf(jogador) + 1}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Jogador</f:facet>
+                    #{jogador.nome}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Pontos</f:facet>
+                    #{jogador.pontuacao}
+                </h:column>
+            </h:dataTable>
+        </section>
+    </h:form>
+</h:body>
+</html>

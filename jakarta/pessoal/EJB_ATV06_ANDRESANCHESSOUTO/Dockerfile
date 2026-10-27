@@ -1,0 +1,2 @@
+FROM payara/server-full:7.2026.6
+COPY target/EJB_ATV06_ANDRESANCHESSOUTO.war $DEPLOY_DIR
